@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Rechtschreib-Training</title>
     <style>
-        /* Vorheriges CSS bleibt unverändert */
         body {
             font-family: Arial;
             max-width: 800px;
@@ -166,10 +165,10 @@
         let currentLevel = 0;
         let errorCount = 0;
 
-        // Lade die Geschichte aus der JSON-Datei
+        // Load story from JSON file
         async function loadStory() {
             try {
-                const response = await fetch('story.json');
+                const response = await fetch('./story.json');
                 const data = await response.json();
                 storyText = data.story;
                 newGame();
@@ -309,4 +308,32 @@
                     if (currentTextPosition >= storyText.length - currentLevel) {
                         currentTextPosition = 0;
                     }
-                    document.getElementById('current-level').textContent
+                    document.getElementById('current-level').textContent = currentLevel;
+                    showText();
+                }
+            };
+            
+            feedbackContainer.appendChild(finishButton);
+            container.appendChild(feedbackContainer);
+        }
+
+        function newGame() {
+            currentTextPosition = 0;
+            currentLevel = 0;
+            errorCount = 0;
+            showText();
+            document.getElementById('current-level').textContent = currentLevel;
+        }
+
+        function toggleInstructions() {
+            const content = document.querySelector('.instructions-content');
+            const icon = document.querySelector('.toggle-icon');
+            content.classList.toggle('show');
+            icon.classList.toggle('rotated');
+        }
+
+        // Start loading the story when the page loads
+        loadStory();
+    </script>
+</body>
+</html>
