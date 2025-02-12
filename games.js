@@ -262,8 +262,10 @@ const games = {
         ]
     },
 
-    "scifi2": {
-        name: "Weltraum Abenteuer 2",
+
+
+    "hhh": {
+        name: "Weltraum mit Tücken",
         story: [
             "Die Morgensonne wirft ihre ersten Strahlen auf die glänzende Oberfläche des Raumschiffs Aurora Sigma.",
             "Captain Sarah Chen steht auf der Kommandobrücke und beobachtet die schimmernden Ringe des Saturn.",
@@ -405,21 +407,27 @@ const games = {
         levels: [
             {
                 level: 0,
-                name: "Mixed",
-                sentences: 3,
+                name: "XX-YY",
+                sentences: 5,
                 errorProbs: {
-                    1: 0,    // Klein statt Groß
-                    4: 100,  // Einfacher statt Doppelkonsonant
-                    2: 100,
-                    3: 100,
-                    5: 0,
-                    6: 0,
-                    7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0
+                    1: 0,  // Klein statt Groß
+                    2: 100,    // i statt ie
+                    3: 100,    // Vergessene h-Dehnung
+                    4: 100,    // Einfacher statt Doppelkonsonant
+                    5: 0,    // d statt t am Wortende
+                    6: 0,    // t statt d am Wortende
+                    7: 0,    // das statt dass
+                    8: 0,    // dass statt das
+                    9: 0,    // wie statt als
+                    10: 0,   // f statt v in ver- und vor-
+                    11: 0,   // f statt pf
+                    12: 0,   // e statt ä
+                    13: 0    // Unnötiges h nach Vokal
                 }
             }
-          
         ]
     },
+
 
 
    "b2b": {
