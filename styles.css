@@ -61,7 +61,49 @@ body {
     }
 }
 
+#level-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
 
+.level-code {
+    font-family: monospace;
+    background: #2c3e50;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+}
+
+.game-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.game-select {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #4CAF50;
+    border-radius: 5px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.game-select:hover {
+    border-color: #45a049;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.game-select:focus {
+    outline: none;
+    border-color: #45a049;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
 
 /* Instructions Styles */
 .instructions {

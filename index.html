@@ -11,7 +11,16 @@
             <h1>Klick dich schlau!</h1>
             <p>Hier bist DU der Lehrer! Korrgiere was du kannst!</p>
         </div>
+  	 <div class="game-controls">
+        <select id="game-selector" class="game-select">
+            <option value="scifi">Weltraum Abenteuer</option>
+            <option value="maerchen">Märchenwelt</option>
+	<option value="b2b">B2B</option>
+        </select>
         <button onclick="newGame()" class="new-game-btn">🔄 Neues Spiel</button>
+    </div>        
+
+
     </div>
 
     <div class="instructions">
@@ -33,18 +42,21 @@
         </div>
     </div>
 
-    <div id="level-info">
-        Level <span id="current-level">0</span>
-    </div>
+  <div id="level-info">
+    <span class="level-text">Level</span>
+    <span id="current-level">0</span>
+    <span id="level-code" class="level-code"></span>
+</div>
 
     <div id="game-container"></div>
 
     <!-- Scripts -->
-    <script src="story.js"></script>
+    <script src="games.js"></script>     <!-- Zuerst games.js -->
     <script src="levels.js"></script>
+    <script src="story.js"></script>
     <script src="error-generator.js"></script>
     <script src="game-messages.js"></script>
-    <script src="game-ui.js"></script>
+    <script src="game-ui.js"></script>   <!-- UI-Logik erst nach den Daten -->
     <script src="ui.js"></script>
 
 </body>

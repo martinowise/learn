@@ -22,6 +22,21 @@ function getRandomColor() {
     return colors[Math.floor(Math.random() * colors.length)];
 }
 
+
+
+function updateLevelDisplay() {
+    document.getElementById('current-level').textContent = currentLevel;
+    const levelSettings = getLevelSettings(currentLevel);
+    const codeElement = document.getElementById('level-code');
+    if (levelSettings && levelSettings.secret) {
+        codeElement.textContent = levelSettings.secret;
+        codeElement.style.display = 'inline';
+    } else {
+        codeElement.style.display = 'none';
+    }
+}
+
+
 function createConfetti(element, { 
     minCount = 5,      // Minimale Anzahl
     maxCount = 10,     // Maximale Anzahl
@@ -234,8 +249,6 @@ function autoCheckWord(wordElement) {
 }
 
 
-
-
 function handleFinishClick(button, container) {
 
  
@@ -280,22 +293,31 @@ function handleFinishClick(button, container) {
    		 });
         }
 
-
-
-
         const feedbackText = document.createElement('span');
         feedbackText.textContent = ' ' + message;
         feedbackText.style.marginLeft = '10px';
         
-        button.textContent = '➡️ Weiter';
+        button.textContent = '➡️ Nächster Versuch!';
+	if (errorCount <=1) 
+	{
+		x = currentLevel +1;
+	 	 button.textContent = '➡️ Weiter zu Level '  + x + '!!';
+	}
         button.className = 'word';
         
         button.parentNode.appendChild(feedbackText);
-    } else {
+    } 
+	else {
         const currentSettings = getLevelSettings(currentLevel);
         currentTextPosition += currentSettings.sentences;
-        currentLevel = Math.min(currentLevel + 1, 4);
-        document.getElementById('current-level').textContent = currentLevel;
+	if (errorCount <=1) 
+	{
+        	currentLevel = currentLevel + 1;
+  	        updateLevelDisplay();  // Statt document.getElementById('current-level').textContent = currentLevel;
+	
+	   
+	}
+        button.textContent ='🏁 Fertig!';
         showText();
     }
 }
@@ -317,19 +339,67 @@ function addFinishButton(container) {
     container.appendChild(feedbackContainer);
 }
 
+
+
+let currentGameId = 'scifi';
+
+function getCurrentGame() {
+    return games[currentGameId];
+}
+
+function getText(position, numberOfSentences) {
+    let sentences = getCurrentGame().story.slice(position, position + numberOfSentences);
+    return sentences.join(" ");
+}
+
+function getLevelSettings(level) {
+    let levelSettings = getCurrentGame().levels.find(config => config.level === level);
+    if (!levelSettings) {
+        // Fallback auf höchstes Level wenn Level nicht gefunden
+        levelSettings = getCurrentGame().levels.find(config => 
+            config.level === Math.max(...getCurrentGame().levels.map(c => c.level))
+        );
+    }
+    return levelSettings;
+}
+
 function newGame() {
+    // Aktuelle Spiel-ID aus dem Selector holen
+    currentGameId = document.getElementById('game-selector').value;
+    
     currentTextPosition = 0;
     currentLevel = 0;
     errorCount = 0;
     wrongClickCount = 0;
     hasShownCorrectClickMessage = false;
-    hasShownSkippedWordMessage = false;
+    
     showText();
-    document.getElementById('current-level').textContent = currentLevel;
+        updateLevelDisplay();
 }
 
-// Spiel beim Laden starten
+// Event-Listener für Spiel-Auswahl
 document.addEventListener('DOMContentLoaded', function() {
+    const selector = document.getElementById('game-selector');
+    selector.addEventListener('change', function() {
+        if (confirm('Möchtest du wirklich das Spiel wechseln? Der aktuelle Fortschritt geht verloren.')) {
+            newGame();
+        } else {
+            // Zurück zur vorherigen Auswahl
+            selector.value = currentGameId;
+        }
+    });
     showText();
 });
+
+
+
+
+
+
+
+
+
+
+
+
 

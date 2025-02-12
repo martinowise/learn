@@ -119,10 +119,10 @@ function addErrors(text, level = 0) {
             return word;
         }
 
-        // Wenn dieses exakte Wort schon mal als Fehler verwendet wurde, überspringe es
-        if (usedErrorWords.has(word)) {
-            return word;
-        }
+       //  Wenn dieses exakte Wort schon mal als Fehler verwendet wurde, überspringe es
+      //  if (usedErrorWords.has(word) ) {
+      //      return word;
+      //  }
 
         let processedWord = word;
         

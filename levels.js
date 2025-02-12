@@ -38,7 +38,7 @@ const levelConfig = [
         name: "Klein vs. Gross 4/5",
         sentences: 4
     },
- {
+    {
         level: 4,
         name: "Klein vs. Gross 5/5",
         sentences: 5
