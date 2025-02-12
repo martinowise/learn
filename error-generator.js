@@ -119,6 +119,10 @@ function addErrors(text, level = 0) {
             return word;
         }
 
+if (word.length <= 3 && word !== 'als' && word !== 'wie') {
+    return word;
+}
+
        //  Wenn dieses exakte Wort schon mal als Fehler verwendet wurde, überspringe es
       //  if (usedErrorWords.has(word) ) {
       //      return word;
