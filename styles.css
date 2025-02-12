@@ -39,6 +39,30 @@ body {
     font-size: 18px;
 }
 
+/* CSS */
+.confetti {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    pointer-events: none;
+    z-index: 10000;
+    border-radius: 50%;
+    opacity: 1;
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--end-x), var(--end-y)) rotate(var(--rotation));
+        opacity: 0;
+    }
+}
+
+
+
 /* Instructions Styles */
 .instructions {
     background: white;
@@ -140,7 +164,9 @@ body {
 .word.correct {
     background: #d4edda !important;
     color: #155724;
+    animation: correct-pulse 0.4s ease-out;
 }
+
 
 .word.incorrect {
     background: #f8d7da !important;
@@ -170,6 +196,67 @@ body {
 .new-game-btn:active {
     transform: translateY(0);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-message {
+    margin-bottom: 20px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.modal-button {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+    display: block;
+    margin: 0 auto;
+}
+
+.modal-button:hover {
+    background: #2980b9;
 }
 
 /* Responsive Design */

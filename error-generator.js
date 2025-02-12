@@ -16,9 +16,9 @@ function addMistake(word, errorType) {
                 return word.toLowerCase();
             }
             break;
-        case 2: // i statt ie
-            if (word.includes('ie')) {
-                return word.replace(/ie/g, 'i');
+        case 2: // i statt ie - nur innerhalb von Wörtern
+            if (word.match(/\w+ie\w*/)) {  // prüft ob 'ie' nach mindestens einem Buchstaben kommt
+                return word.replace(/(?<=\w)ie/g, 'i');  // ersetzt nur 'ie' nach einem Buchstaben
             }
             break;
         case 3: // Vergessene h-Dehnung
@@ -106,12 +106,12 @@ function getLevelSettings(level = 0) {
 }
 
 
-
 function addErrors(text, level = 0) {
     const words = generateWordList(text);
     const levelSettings = getLevelSettings(level);
-
-
+    
+    // Set zum Tracken der exakten Wörter, die bereits als Fehler verwendet wurden
+    const usedErrorWords = new Set();
 
     const processedWords = words.map(word => {
         // Satzzeichen und Leerzeichen nicht bearbeiten
@@ -119,7 +119,13 @@ function addErrors(text, level = 0) {
             return word;
         }
 
+        // Wenn dieses exakte Wort schon mal als Fehler verwendet wurde, überspringe es
+        if (usedErrorWords.has(word)) {
+            return word;
+        }
+
         let processedWord = word;
+        
         // Für jede mögliche Fehlerart prüfen
         Object.entries(levelSettings.errorProbs).forEach(([errorType, probability]) => {
             // Nur einen Fehler pro Wort
@@ -127,6 +133,7 @@ function addErrors(text, level = 0) {
                 const newWord = addMistake(word, parseInt(errorType));
                 if (newWord !== word) {
                     processedWord = newWord;
+                    usedErrorWords.add(word); // Speichere das Original-Wort
                 }
             }
         });

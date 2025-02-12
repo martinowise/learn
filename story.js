@@ -1,5 +1,5 @@
 const storyText = [
-            "Die Morgensonne wirft ihre ersten Strahlen auf die glänzende Oberfläche des Raumschiffs Aurora.",
+            "Die Morgensonne wirft ihre ersten Strahlen auf die glänzende Oberfläche des Raumschiffs Aurora Sigma.",
             "Captain Sarah Chen steht auf der Kommandobrücke und beobachtet die schimmernden Ringe des Saturn.",
             "Die Sensoren des Schiffs erfassen plötzlich ein ungewöhnliches Signal aus dem Asteroidengürtel.",
             "Erste Analysen zeigen Energiemuster die keiner bekannten Quelle entsprechen.",
