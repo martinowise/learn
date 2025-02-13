@@ -163,6 +163,7 @@ const games = {
             {
                 level: 1,
                 name: "Klein vs. Gross 2/5",
+                secret: "RE-01-LD",
                 sentences: 2,
                 errorProbs: {
                     1: 100,  // Klein statt Groß
@@ -172,6 +173,7 @@ const games = {
             {
                 level: 2,
                 name: "Klein vs. Gross 3/5",
+                secret: "RE-02-LV",
                 sentences: 3,
                 errorProbs: {
                     1: 100,  // Klein statt Groß
@@ -181,6 +183,7 @@ const games = {
             {
                 level: 3,
                 name: "Klein vs. Gross 4/5",
+                secret: "RE-03-LT",
                 sentences: 4,
                 errorProbs: {
                     1: 100,  // Klein statt Groß
@@ -190,6 +193,7 @@ const games = {
             {
                 level: 4,
                 name: "Klein vs. Gross 5/5",
+                secret: "RE-04-GG",
                 sentences: 5,
                 errorProbs: {
                     1: 100,  // Klein statt Groß
@@ -199,6 +203,7 @@ const games = {
             {
                 level: 5,
                 name: "Konsonanten-Raub! 1/3",
+                secret: "RE-04-TT",
                 sentences: 2,
                 errorProbs: {
                     1: 0,    // Klein statt Groß
@@ -240,6 +245,7 @@ const games = {
             {
                 level: 9,
                 name: "Lang oder kurz? 'ie' und 'h' 2/3",
+                secret: "RE-04-X1",
                 sentences: 4,
                 errorProbs: {
                     1: 0,    // Klein statt Groß
@@ -251,6 +257,7 @@ const games = {
             {
                 level: 10,
                 name: "Lang oder kurz? 'ie' und 'h' 3/3",
+                secret: "RE-04-XE",
                 sentences: 5,
                 errorProbs: {
                     1: 0,    // Klein statt Groß
@@ -261,8 +268,6 @@ const games = {
             }
         ]
     },
-
-
 
     "hhh": {
         name: "Weltraum mit Tücken",
@@ -428,8 +433,6 @@ const games = {
         ]
     },
 
-
-
    "b2b": {
         name: "b2b",
         story: [
@@ -507,8 +510,6 @@ const games = {
         ]
     },
 
-
-
     "maerchen": {
         name: "Zauberwald",
         story: [
@@ -559,5 +560,122 @@ const games = {
                 }
             }
         ]
+    },
+
+    "abenteuer": {
+        name: "Abenteuer",
+        story : [
+            "Lena und Finn lieben Abenteuer.",
+            "Eines Tages finden sie eine alte Karte.",
+            "Die Karte zeigt einen geheimen Weg durch den Wald.",
+            "Sie packen ihre Rucksäcke mit Proviant und Taschenlampen.",
+            "Dann machen sie sich auf den Weg.",
+            "Der Wald ist dicht und dunkel.",
+            "Ein leiser Wind streicht durch die Blätter.",
+            "Lena stolpert über eine Wurzel und fällt fast hin.",
+            "Finn hilft ihr auf und sie lachen.",
+            "Weiter geht es durch das Dickicht.",
+            "Plötzlich raschelt es im Gebüsch.",
+            "Sie bleiben stehen und lauschen.",
+            "Ein Eichhörnchen huscht an ihnen vorbei.",
+            "Erleichtert gehen sie weiter.",
+            "Nach einer Weile sehen sie eine alte Hütte.",
+            "Die Tür klemmt, aber Finn drückt sie auf.",
+            "Drinnen ist es staubig und dunkel.",
+            "Lena schaltet ihre Taschenlampe ein.",
+            "An der Wand hängt ein verrosteter Schlüssel.",
+            "Finn nimmt den Schlüssel und steckt ihn ein.",
+            "Draußen hören sie plötzlich ein Knacken.",
+            "Sie schleichen zur Tür und schauen hinaus.",
+            "Ein alter Mann mit einem langen Bart steht dort.",
+            "Er schaut sie freundlich an und winkt.",
+            "Lena und Finn nicken aufgeregt.",
+            "Sie folgen dem Mann einen schmalen Pfad entlang.",
+            "Der Pfad führt zu einem großen Felsen.",
+            "Der Mann zeigt auf eine kleine Öffnung.",
+            "Finn krabbelt mutig hinein.",
+            "Lena folgt ihm vorsichtig.",
+            "Drinnen finden sie eine alte Truhe.",
+            "Der Schlüssel passt genau ins Schloss.",
+            "Mit klopfendem Herzen dreht Finn ihn um.",
+            "Das Schloss klickt und die Truhe öffnet sich.",
+            "Drinnen glitzert ein altes Buch.",
+            "Lena blättert vorsichtig durch die Seiten.",
+            "Der alte Mann lächelt und nickt.",
+            "Lena und Finn nehmen das Buch mit.",
+            "Auf dem Heimweg freuen sie sich schon auf ihr nächstes Abenteuer.",
+            "Sie blättern durch das Buch und entdecken geheimnisvolle Zeichen.",
+            "Finn vermutet, dass es eine alte Sprache ist.",
+            "Lena schlägt vor, einen Experten zu suchen.",
+            "Am nächsten Tag besuchen sie die Bibliothek.",
+            "Dort treffen sie Frau Weber, eine Historikerin.",
+            "Sie zeigt ihnen ein Buch mit ähnlichen Zeichen.",
+            "Gemeinsam entziffern sie eine Botschaft.",
+            "Die Botschaft spricht von einem versteckten Schatz.",
+            "Finn und Lena sind begeistert.",
+            "Frau Weber gibt ihnen eine Liste mit möglichen Orten.",
+            "Die Kinder entscheiden sich für die alte Ruine im Wald.",
+            "Sie machen sich erneut auf den Weg.",
+            "Der Himmel ist bewölkt und ein leichter Regen fällt.",
+            "Sie erreichen die Ruine und suchen nach Hinweisen.",
+            "Plötzlich bemerken sie eine verborgene Treppe.",
+            "Vorsichtig steigen sie hinab.",
+            "Unten entdecken sie eine weitere Tür mit einem Rätsel.",
+            "Lena liest die Inschrift laut vor.",
+            "Finn kombiniert die Hinweise aus dem Buch.",
+            "Mit zittrigen Fingern gibt er die Lösung ein.",
+            "Die Tür öffnet sich langsam mit einem Knarren.",
+            "Hinter der Tür verbirgt sich eine große Kammer.",
+            "In der Mitte steht eine steinerne Kiste.",
+            "Sie öffnen die Kiste und finden goldene Münzen.",
+            "Zwischen den Münzen liegt eine alte Schriftrolle.",
+            "Lena rollt sie auf und beginnt zu lesen.",
+            "Es ist eine Karte zu weiteren geheimen Orten.",
+            "Finn und Lena schauen sich an und grinsen.",
+            "Ein neues Abenteuer wartet bereits auf sie." 
+        ],
+        levels: [
+            {
+                level: 0,
+                name: "Erste Schritte",
+                secret: "CC-01-LD",
+                sentences: 3,
+                errorProbs: {
+                    1: 100,  // Klein statt Groß
+                    2: 0,    // i statt ie
+                    3: 0,    // Vergessene h-Dehnung
+                    4: 0,    // Einfacher statt Doppelkonsonant
+                    5: 0     // d statt t am Wortende
+                }
+            },
+            {
+                level: 1,
+                name: "1",
+                secret: "ZA-AA-UB",
+                sentences: 3,
+                errorProbs: {
+                    1: 40,   // Klein statt Groß
+                    2: 40,   // i statt ie
+                    3: 40,   // Vergessene h-Dehnung
+                    4: 0,    // Einfacher statt Doppelkonsonant
+                    5: 0     // d statt t am Wortende
+                }
+            },
+            {
+                level: 2,
+                name: "2",
+                secret: "MA-03-XX",
+                sentences: 4,
+                errorProbs: {
+                    1: 25,   // Klein statt Groß
+                    2: 25,   // i statt ie
+                    3: 25,   // Vergessene h-Dehnung
+                    4: 25,   // Einfacher statt Doppelkonsonant
+                    5: 25    // d statt t am Wortende
+                }
+            }
+        ]
     }
+
+
 };

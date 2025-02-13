@@ -158,8 +158,6 @@ function showText() {
 }
 
 
-
-
 function handleWordClick(wordElement) {
      console.log('handleWordClick called');
 
@@ -176,9 +174,10 @@ function handleWordClick(wordElement) {
                word.dataset.wasModified === 'true';
     });
 
-    if (hasUnhandledErrorsBefore && !hasShownSkippedWordMessage) {
+    if (hasUnhandledErrorsBefore ) {
         showModal("⚠️ Tipp: Bearbeite die Wörter der Reihe nach - es gibt noch Fehler vor diesem Wort!");
         hasShownSkippedWordMessage = true;
+        return;
     }
     
     // Auto-check vorherige Wörter
