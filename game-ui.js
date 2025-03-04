@@ -4,7 +4,11 @@ let errorCount = 0;
 let wrongClickCount = 0;
 let hasShownCorrectClickMessage = false;
 let hasShownSkippedWordMessage = false;
+let currentGameId = 'scifi';
 
+// Tooltip-Funktionen importieren oder einbinden
+// Normalerweise würde man hier importieren, aber für direktes Einbinden:
+// import { showTooltip, hideTooltip } from './tooltip-utils.js';
 
 function getRandomColor() {
     const colors = [
@@ -22,20 +26,54 @@ function getRandomColor() {
     return colors[Math.floor(Math.random() * colors.length)];
 }
 
-
-
+// Update display to show the level code
 function updateLevelDisplay() {
     document.getElementById('current-level').textContent = currentLevel;
+    
+    // Aktualisiere auch den Spielnamen im Titel
+    document.getElementById('game-title').textContent = getCurrentGame().name || "Klick dich schlau!";
+    
     const levelSettings = getLevelSettings(currentLevel);
     const codeElement = document.getElementById('level-code');
-    if (levelSettings && levelSettings.secret) {
+    
+    if (levelSettings) {
+        // Ensure code exists
+        if (!levelSettings.secret) {
+            const gamePrefix = currentGameId.substring(0, 2).toUpperCase();
+            const levelNum = String(currentLevel).padStart(2, '0');
+            const randomChars = generateRandomChars(2);
+            levelSettings.secret = `${gamePrefix}-${levelNum}-${randomChars}`;
+        }
+        
+        // Display the code
         codeElement.textContent = levelSettings.secret;
         codeElement.style.display = 'inline';
+        
+        // Add tooltip functionality to make it clear the code can be used later
+        codeElement.title = "Merke dir diesen Code, um später hier weiterzumachen!";
+        codeElement.style.cursor = "help";
+        codeElement.style.position = "relative";
+        
+        // Add click-to-copy functionality
+        codeElement.onclick = function() {
+            // Copy code to clipboard
+            navigator.clipboard.writeText(levelSettings.secret).then(function() {
+                showTooltip(codeElement, "Code kopiert! ✓", "success", { 
+                    duration: 1500,
+                    closeOthers: true
+                });
+            }).catch(function() {
+                // Fallback for browsers without clipboard API
+                showTooltip(codeElement, "Dein Code: " + levelSettings.secret, "info", { 
+                    duration: 2000,
+                    closeOthers: true
+                });
+            });
+        };
     } else {
         codeElement.style.display = 'none';
     }
 }
-
 
 function createConfetti(element, { 
     minCount = 5,      // Minimale Anzahl
@@ -81,44 +119,6 @@ function createConfetti(element, {
     }
 }
 
-
-function showModal(message) {
-    // Entferne existierende Modals
-    const existingModal = document.querySelector('.modal-overlay');
-    if (existingModal) {
-        existingModal.remove();
-    }
-
-    // Erstelle Modal-Elemente
-    const overlay = document.createElement('div');
-    overlay.className = 'modal-overlay';
-
-    const modal = document.createElement('div');
-    modal.className = 'modal-box';
-
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'modal-message';
-    messageDiv.textContent = message;
-
-    const button = document.createElement('button');
-    button.className = 'modal-button';
-    button.textContent = 'OK';
-    button.onclick = () => overlay.remove();
-
-    // Zusammenbauen
-    modal.appendChild(messageDiv);
-    modal.appendChild(button);
-    overlay.appendChild(modal);
-    document.body.appendChild(overlay);
-
-    // Automatisch schließen nach 3 Sekunden
-    setTimeout(() => {
-        if (document.body.contains(overlay)) {
-            overlay.remove();
-        }
-    }, 3000);
-}
-
 function showText() {
     const container = document.getElementById('game-container');
     container.innerHTML = '';
@@ -157,9 +157,8 @@ function showText() {
     addFinishButton(container);
 }
 
-
 function handleWordClick(wordElement) {
-     console.log('handleWordClick called');
+    console.log('handleWordClick called');
 
     if (wordElement.dataset.checked === 'true') return;
     
@@ -174,8 +173,14 @@ function handleWordClick(wordElement) {
                word.dataset.wasModified === 'true';
     });
 
-    if (hasUnhandledErrorsBefore ) {
-        showModal("⚠️ Tipp: Bearbeite die Wörter der Reihe nach - es gibt noch Fehler vor diesem Wort!");
+    if (hasUnhandledErrorsBefore) {
+        // Statt Modal: Zeige Tooltip mit Warnung
+        showTooltip(
+            wordElement,
+            "⚠️ Tipp: Bearbeite die Wörter der Reihe nach - es gibt noch Fehler vor diesem Wort!",
+            'info',
+            { duration: 3000 }
+        );
         hasShownSkippedWordMessage = true;
         return;
     }
@@ -192,39 +197,48 @@ function handleWordClick(wordElement) {
     // Prüfe angeklicktes Wort
     const wasModified = wordElement.dataset.wasModified === 'true';
     wordElement.dataset.checked = 'true';
-            console.log('111');
-   if (wasModified) {
+    console.log('111');
+    
+    if (wasModified) {
         // Korrekter Klick
-         wordElement.textContent = wordElement.dataset.correctWord;
+        wordElement.textContent = wordElement.dataset.correctWord;
         console.log('korrekt!');
         wordElement.className = 'word correct';
-	
-	createConfetti(wordElement, { 
-        minCount: 3, 
-        maxCount: 10, 
-        duration: 0.5 
-    });
-
-
+        
+        // Zeige Tooltip nur beim ersten gefundenen Fehler
         if (!hasShownCorrectClickMessage) {
-            showModal("🎯 Super! Du hast einen Fehler gefunden!");
+            showTooltip(
+                wordElement, 
+                "🎯 Super! Du hast einen Fehler gefunden!", 
+                'success'
+            );
             hasShownCorrectClickMessage = true;
         }
-    }
-
-else {
+        
+        createConfetti(wordElement, { 
+            minCount: 3, 
+            maxCount: 10, 
+            duration: 0.5 
+        });
+    } else {
         // Falscher Klick
         wordElement.className = 'word incorrect';
         errorCount++;
-        if (wrongClickCount < 3) {
-            const messages = [
-                "😅 Ups! Dieses Wort war eigentlich richtig geschrieben!",
-                "🤔 Nicht jedes Wort enthält einen Fehler!",
-                "💡 Klicke nur auf Wörter, die falsch geschrieben sind!"
-            ];
-            showModal(messages[wrongClickCount]);
-            wrongClickCount++;
-        }
+        
+        // Statt Modal: Zeige Tooltip mit Fehlermeldung
+        const messages = [
+            "😅 Ups! Dieses Wort war eigentlich richtig geschrieben!",
+            "🤔 Nicht jedes Wort enthält einen Fehler!",
+            "💡 Klicke nur auf Wörter, die falsch geschrieben sind!"
+        ];
+        
+        showTooltip(
+            wordElement,
+            messages[Math.min(wrongClickCount, messages.length - 1)],
+            'error'
+        );
+        
+        wrongClickCount++;
     }
 }
 
@@ -239,21 +253,29 @@ function autoCheckWord(wordElement) {
     if (!wasModified) {
         // Wort war korrekt
         wordElement.className = 'word correct';
+        
+        // Optional: Tooltip für auto-check
+        showTooltip(wordElement, "✓ Richtig!", 'success', { 
+            duration: 1000, 
+            closeOthers: false 
+        });
     } else {
         // Wort hatte einen Fehler - wurde übersehen
         wordElement.textContent = wordElement.dataset.correctWord;
         wordElement.className = 'word incorrect';
+        
+        // Optional: Tooltip für übersehenen Fehler
+        showTooltip(wordElement, "❌ Hier war ein Fehler!", 'error', { 
+            duration: 1000, 
+            closeOthers: false 
+        });
+        
         errorCount++;
     }
 }
 
-
 function handleFinishClick(button, container) {
-
- 
-
     if (button.textContent === '🏁 Fertig!') {
-  
         const wordElements = Array.from(container.getElementsByClassName('word'));
         
         // Zähle unbehandelte fehlerhafte Wörter
@@ -264,7 +286,10 @@ function handleFinishClick(button, container) {
         }).length;
 
         if (uncheckedErrors > 0) {
-            showModal(getUncheckedErrorMessage(uncheckedErrors));
+            // Statt Modal: Tooltip am Fertig-Button
+            showTooltip(button, getUncheckedErrorMessage(uncheckedErrors), 'info', {
+                duration: 3000
+            });
             return;
         }
 
@@ -277,19 +302,19 @@ function handleFinishClick(button, container) {
         });
 
         const message = getFinishMessage(errorCount);
-	if (errorCount == 0) {
-		   createConfetti(button, { 
-     		   minCount: 120, 
-      		  maxCount: 230, 
-      		  duration: 0.8 
-   		 });
+        if (errorCount == 0) {
+            createConfetti(button, { 
+                minCount: 120, 
+                maxCount: 230, 
+                duration: 0.8 
+            });
         }
-  	 if (errorCount == 1) {
-		  createConfetti(button, { 
-     		  minCount: 60, 
-      		  maxCount: 80, 
-      		  duration: 0.8 
-   		 });
+        if (errorCount == 1) {
+            createConfetti(button, { 
+                minCount: 60, 
+                maxCount: 80, 
+                duration: 0.8 
+            });
         }
 
         const feedbackText = document.createElement('span');
@@ -297,26 +322,21 @@ function handleFinishClick(button, container) {
         feedbackText.style.marginLeft = '10px';
         
         button.textContent = '➡️ Nächster Versuch!';
-	if (errorCount <=1) 
-	{
-		x = currentLevel +1;
-	 	 button.textContent = '➡️ Weiter zu Level '  + x + '!!';
-	}
+        if (errorCount <=1) {
+            x = currentLevel + 1;
+            button.textContent = '➡️ Weiter zu Level ' + x + '!!';
+        }
         button.className = 'word';
         
         button.parentNode.appendChild(feedbackText);
-    } 
-	else {
+    } else {
         const currentSettings = getLevelSettings(currentLevel);
         currentTextPosition += currentSettings.sentences;
-	if (errorCount <=1) 
-	{
-        	currentLevel = currentLevel + 1;
-  	        updateLevelDisplay();  // Statt document.getElementById('current-level').textContent = currentLevel;
-	
-	   
-	}
-        button.textContent ='🏁 Fertig!';
+        if (errorCount <=1) {
+            currentLevel = currentLevel + 1;
+            updateLevelDisplay();
+        }
+        button.textContent = '🏁 Fertig!';
         showText();
     }
 }
@@ -334,13 +354,8 @@ function addFinishButton(container) {
     };
     
     feedbackContainer.appendChild(finishButton);
-
     container.appendChild(feedbackContainer);
 }
-
-
-
-let currentGameId = 'scifi';
 
 function getCurrentGame() {
     return games[currentGameId];
@@ -362,43 +377,316 @@ function getLevelSettings(level) {
     return levelSettings;
 }
 
-function newGame() {
-    // Aktuelle Spiel-ID aus dem Selector holen
-    currentGameId = document.getElementById('game-selector').value;
+// Zeigt einen Dialog zur Spielauswahl an
+// Update the game selection dialog to include code entry option
+function showGameSelectionDialog() {
+    // Erstelle einen Modal-Dialog
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay';
     
+    const modalBox = document.createElement('div');
+    modalBox.className = 'modal-box';
+    
+    // Titel hinzufügen
+    const title = document.createElement('h2');
+    title.textContent = 'Wähle eine Lektion';
+    title.style.marginBottom = '20px';
+    title.style.textAlign = 'center';
+    title.style.color = '#2c3e50';
+    
+    modalBox.appendChild(title);
+    
+    // Liste der verfügbaren Spiele
+    const gameList = document.createElement('div');
+    gameList.style.display = 'flex';
+    gameList.style.flexDirection = 'column';
+    gameList.style.gap = '10px';
+    
+    // Für jedes Spiel einen Button erstellen
+    Object.entries(games).forEach(([gameId, gameData]) => {
+        const gameButton = document.createElement('button');
+        gameButton.textContent = gameData.name;
+        gameButton.className = 'game-select-button';
+        
+        // Klick-Handler
+        gameButton.onclick = function() {
+            // Spiel auswählen und starten
+            currentGameId = gameId;
+            startNewGame();
+            
+            // Dialog schließen
+            document.body.removeChild(modalOverlay);
+        };
+        
+        gameList.appendChild(gameButton);
+    });
+    
+    modalBox.appendChild(gameList);
+    
+    // Trennlinie
+    const divider = document.createElement('div');
+    divider.style.margin = '20px 0';
+    divider.style.borderBottom = '1px solid #ddd';
+    modalBox.appendChild(divider);
+    
+    // "Code eingeben" Option
+    const codeButton = document.createElement('button');
+    codeButton.textContent = '🔑 Code eingeben';
+    codeButton.className = 'code-entry-button';
+    codeButton.onclick = function() {
+        // Dialog schließen
+        document.body.removeChild(modalOverlay);
+        
+        // Code-Eingabe Dialog anzeigen
+        showCodeEntryDialog();
+    };
+    
+    modalBox.appendChild(codeButton);
+    modalOverlay.appendChild(modalBox);
+    document.body.appendChild(modalOverlay);
+    
+    // Click außerhalb des Dialogs schließt ihn
+    modalOverlay.addEventListener('click', function(event) {
+        if (event.target === modalOverlay) {
+            document.body.removeChild(modalOverlay);
+        }
+    });
+}
+
+function startNewGame() {
     currentTextPosition = 0;
     currentLevel = 0;
     errorCount = 0;
     wrongClickCount = 0;
     hasShownCorrectClickMessage = false;
+    hasShownSkippedWordMessage = false;
     
     showText();
-        updateLevelDisplay();
+    updateLevelDisplay();
+}
+
+function newGame() {
+    // Statt direkt ein neues Spiel zu starten, zeigen wir den Auswahlbildschirm
+    showGameSelectionDialog();
 }
 
 // Event-Listener für Spiel-Auswahl
 document.addEventListener('DOMContentLoaded', function() {
-    const selector = document.getElementById('game-selector');
-    selector.addEventListener('change', function() {
-        if (confirm('Möchtest du wirklich das Spiel wechseln? Der aktuelle Fortschritt geht verloren.')) {
-            newGame();
-        } else {
-            // Zurück zur vorherigen Auswahl
-            selector.value = currentGameId;
-        }
-    });
+    // Wir entfernen den Change-Event-Listener, da die Auswahl jetzt über den Dialog erfolgt
+    ensureAllLevelsHaveCodes();
+    // Erstes Spiel starten
     showText();
+    updateLevelDisplay();
 });
 
+// === Add these functions to game-ui.js ===
 
+// Generate a unique code for each level if one doesn't exist
+function ensureAllLevelsHaveCodes() {
+    // Iterate through all games
+    Object.keys(games).forEach(gameId => {
+        const game = games[gameId];
+        
+        // Ensure each level has a secret code
+        game.levels.forEach((level, index) => {
+            if (!level.secret) {
+                // Create a unique code if not present
+                // Format: [game prefix]-[level]-[random chars]
+                const gamePrefix = gameId.substring(0, 2).toUpperCase();
+                const levelNum = String(level.level).padStart(2, '0');
+                const randomChars = generateRandomChars(2);
+                level.secret = `${gamePrefix}-${levelNum}-${randomChars}`;
+            }
+        });
+    });
+}
 
+// Generate random characters for codes
+function generateRandomChars(length) {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Excluded similar looking characters
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
 
+// Find game and level by code
+function findLevelByCode(code) {
+    let foundGame = null;
+    let foundLevel = null;
+    
+    // Normalize the code (uppercase, remove spaces)
+    const normalizedCode = code.toUpperCase().replace(/\s/g, '');
+    
+    // Search through all games and levels
+    Object.keys(games).forEach(gameId => {
+        const game = games[gameId];
+        
+        game.levels.forEach(level => {
+            if (level.secret && level.secret.toUpperCase() === normalizedCode) {
+                foundGame = gameId;
+                foundLevel = level.level;
+            }
+        });
+    });
+    
+    return { gameId: foundGame, level: foundLevel };
+}
 
+// Calculate text position based on level
+function calculateTextPosition(gameId, levelNum) {
+    const game = games[gameId];
+    let position = 0;
+    
+    // Sum up sentences from previous levels
+    for (let i = 0; i < levelNum; i++) {
+        const prevLevel = game.levels.find(level => level.level === i);
+        if (prevLevel) {
+            position += prevLevel.sentences;
+        }
+    }
+    
+    return position;
+}
 
+// Start a game from a specific code
+function startGameFromCode(code) {
+    const { gameId, level } = findLevelByCode(code);
+    
+    if (gameId && level !== null) {
+        // Set the current game
+        currentGameId = gameId;
+        
+        // Calculate the text position
+        currentTextPosition = calculateTextPosition(gameId, level);
+        
+        // Set the current level
+        currentLevel = level;
+        
+        // Reset error counters
+        errorCount = 0;
+        wrongClickCount = 0;
+        hasShownCorrectClickMessage = false;
+        hasShownSkippedWordMessage = false;
+        
+        // Update the game
+        showText();
+        updateLevelDisplay();
+        
+        return true;
+    }
+    
+    return false; // Code not found
+}
 
-
-
-
-
-
-
+// Show a dialog to enter a code
+function showCodeEntryDialog() {
+    // Create a modal dialog
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay';
+    
+    const modalBox = document.createElement('div');
+    modalBox.className = 'modal-box code-entry-box';
+    
+    // Title
+    const title = document.createElement('h2');
+    title.textContent = 'Code eingeben';
+    title.style.marginBottom = '20px';
+    title.style.textAlign = 'center';
+    title.style.color = '#2c3e50';
+    
+    // Input field
+    const inputField = document.createElement('input');
+    inputField.type = 'text';
+    inputField.placeholder = 'XX-00-YY';
+    inputField.className = 'code-input';
+    inputField.style.width = '100%';
+    inputField.style.padding = '12px';
+    inputField.style.fontSize = '18px';
+    inputField.style.textAlign = 'center';
+    inputField.style.marginBottom = '20px';
+    inputField.style.borderRadius = '5px';
+    inputField.style.border = '2px solid #3498db';
+    
+    // Error message (hidden by default)
+    const errorMessage = document.createElement('p');
+    errorMessage.textContent = 'Ungültiger Code. Bitte versuche es erneut.';
+    errorMessage.className = 'error-message';
+    errorMessage.style.color = '#e74c3c';
+    errorMessage.style.textAlign = 'center';
+    errorMessage.style.display = 'none';
+    errorMessage.style.marginBottom = '15px';
+    
+    // Submit button
+    const submitButton = document.createElement('button');
+    submitButton.textContent = 'Los geht\'s!';
+    submitButton.className = 'modal-button';
+    submitButton.style.width = '100%';
+    submitButton.style.padding = '12px';
+    submitButton.style.fontSize = '16px';
+    submitButton.style.backgroundColor = '#4CAF50';
+    
+    // Cancel button
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Abbrechen';
+    cancelButton.className = 'modal-button cancel-button';
+    cancelButton.style.width = '100%';
+    cancelButton.style.padding = '12px';
+    cancelButton.style.fontSize = '16px';
+    cancelButton.style.backgroundColor = '#7f8c8d';
+    cancelButton.style.marginTop = '10px';
+    
+    // Add elements to modal
+    modalBox.appendChild(title);
+    modalBox.appendChild(inputField);
+    modalBox.appendChild(errorMessage);
+    modalBox.appendChild(submitButton);
+    modalBox.appendChild(cancelButton);
+    modalOverlay.appendChild(modalBox);
+    document.body.appendChild(modalOverlay);
+    
+    // Focus the input field
+    setTimeout(() => inputField.focus(), 100);
+    
+    // Handle submit
+    submitButton.addEventListener('click', function() {
+        const code = inputField.value.trim();
+        if (code) {
+            const success = startGameFromCode(code);
+            if (success) {
+                // Close the dialog
+                document.body.removeChild(modalOverlay);
+            } else {
+                // Show error message
+                errorMessage.style.display = 'block';
+                inputField.style.borderColor = '#e74c3c';
+            }
+        }
+    });
+    
+    // Handle cancel
+    cancelButton.addEventListener('click', function() {
+        document.body.removeChild(modalOverlay);
+    });
+    
+    // Handle enter key
+    inputField.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            submitButton.click();
+        }
+    });
+    
+    // Reset error state on input
+    inputField.addEventListener('input', function() {
+        errorMessage.style.display = 'none';
+        inputField.style.borderColor = '#3498db';
+    });
+    
+    // Click outside to cancel
+    modalOverlay.addEventListener('click', function(event) {
+        if (event.target === modalOverlay) {
+            document.body.removeChild(modalOverlay);
+        }
+    });
+}

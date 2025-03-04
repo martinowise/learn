@@ -8,10 +8,10 @@ function getText(position, numberOfSentences) {
 function getFinishMessage(errors) {
     const messages = [
         "🌟 Wahnsinn! Du bist ein Rechtschreib-Ninja! Keine Fehler!",
-        "🎯 Fast perfekt! Nur " + errors + " Fehler übersehen. Deine Brille ist wohl auf Urlaub?",
+        "🎯 Fast perfekt! Nur " + errors + " Fehler übersehen. Gleich nochmal!",
         "😅 " + errors + " Fehler... Na ja, Rome wasn't built in a day!",
-        "🤔 " + errors + " Fehler? Vielleicht solltest du weniger Netflix und mehr Bücher...",
-        "🦥 Oje, " + errors + " Fehler! Heute einen faulen Tag erwischt?",
+        "🤔 " + errors + " Fehler?  Hmm......",
+        "🦥 Oje, " + errors + " Fehler! Heute einen schlechten Tag erwischt?",
         "🎮 " + errors + " Fehler... Zu viel Minecraft gespielt?"
     ];
     
