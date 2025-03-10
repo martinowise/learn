@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Klick-Camp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="title-block">
+            <h2 id="game-title">Klick dich schlau!</h2>
+        </div>
+        <div class="game-controls">
+            <!-- Game selector wird nun versteckt und nur im Dialog angezeigt -->
+            <button onclick="newGame()" class="new-game-btn">🔄 Neues Spiel</button>
+            <button onclick="toggleInstructions()" class="info-btn" title="Anleitung anzeigen">ℹ️</button>
+        </div>        
+    </div>
+
+    <!-- Instructions als Modal -->
+    <div id="instructions-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box instructions-box">
+            <h2>🎯 So funktioniert's:</h2>
+            <div class="instructions-modal-content">
+                <p><strong>Deine Aufgabe:</strong> Du bist der Lehrer! Finde alle Fehler im Text.</p>
+                <p><strong>So gehst du vor:</strong></p>
+                <ul>
+                    <li>Klicke auf jedes Wort, das falsch geschrieben ist!</li>
+                    <li>Klicke NICHT auf Wörter, die richtig geschrieben sind!</li>
+                    <li>Wenn du fertig bist, klicke auf den "Fertig"-Button</li>
+                    <li>Version 0.5</li>
+                </ul>
+                <p><strong>Tipp:</strong> Lies dir den Text genau durch. Manchmal verstecken sich die Fehler gut!</p>
+            </div>
+            <button onclick="toggleInstructions()" class="modal-button">Verstanden!</button>
+        </div>
+    </div>
+    
+    <!-- Startanleitung, wird nur beim ersten Laden angezeigt -->
+    <div id="starter-instructions" class="instructions">
+        <div class="instructions-header" onclick="hideStarterInstructions()">
+            <h2>🎯 So funktioniert's</h2>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="instructions-content show">
+            <p><strong>Deine Aufgabe:</strong> Du bist der Lehrer! Finde alle Fehler im Text.</p>
+            <p><strong>So gehst du vor:</strong></p>
+            <ul>
+                <li>Klicke auf jedes Wort, das falsch geschrieben ist!</li>
+                <li>Klicke NICHT auf Wörter, die richtig geschrieben sind!</li>
+                <li>Wenn du fertig bist, klicke auf den "Fertig"-Button</li>
+                <li>Version 0.5</li>
+            </ul>
+            <p><strong>Tipp:</strong> Lies dir den Text genau durch. Manchmal verstecken sich die Fehler gut!</p>
+        </div>
+    </div>
+
+    <div id="level-info">
+        <span class="level-text">Level</span>
+        <span id="current-level">0</span>
+        <span id="level-code" class="level-code" title="Merke dir diesen Code, um später hier weiterzumachen!"></span>
+    </div>
+
+    <div id="game-container" class="game-container"></div>
+    
+    <!-- Scripts -->
+    <script src="tooltip-utils.js"></script>
+    <script src="games.js"></script>     <!-- Zuerst games.js -->
+    <script src="levels.js"></script>
+    <script src="story.js"></script>
+    <script src="error-generator.js"></script>
+    <script src="game-messages.js"></script>
+    <script src="game-ui.js"></script>   <!-- UI-Logik erst nach den Daten -->
+    <script src="ui.js"></script>
+
+</body>
+</html>
